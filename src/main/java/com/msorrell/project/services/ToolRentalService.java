@@ -148,7 +148,7 @@ public class ToolRentalService {
         System.out.println("Please provide the checkout date (Format: MM/DD/YY)");
         String checkoutDate = reader.readLine();
         while (!validateCheckoutDate(checkoutDate)) {
-            System.out.println("Please provide a valid date");
+            System.out.println("Please provide a valid date (Format: MM/DD/YY)");
             checkoutDate = reader.readLine();
         }
         checkout.setCheckoutDate(LocalDate.parse(checkoutDate, DATE_FORMATTER));
