@@ -1,7 +1,5 @@
 package com.msorrell.project.validators;
 
-import com.msorrell.project.enums.ToolBrand;
-import com.msorrell.project.enums.ToolType;
 import com.msorrell.project.models.Tool;
 
 import java.time.LocalDate;
@@ -49,8 +47,8 @@ public final class InputValidator {
      * @return true - valid, false - not valid
      */
     public static boolean validateTool(final Tool tool) {
-        return tool != null && validateToolCode(tool.getCode()) && validateToolBrand(tool.getBrand())
-                && validateToolType(tool.getType());
+        final Tool matchingTool = findTool(tool.getCode());
+        return  matchingTool != null &&  matchingTool.equals(tool);
     }
 
     /**
@@ -134,19 +132,4 @@ public final class InputValidator {
     public static boolean validateCheckoutAgain(final String again) {
         return CHECKOUT_AGAIN_PATTERN.matcher(again).matches();
     }
-
-    /**
-     * Determines if the tool type is valid.
-     * The tool type needs to be nonnull
-     * @param toolType ToolType object
-     * @return true - valid, false - not valid
-     */
-    public static boolean validateToolType(final ToolType toolType) {
-        return toolType != null;
-    }
-
-    public static boolean validateToolBrand(final ToolBrand toolBrand) {
-        return toolBrand != null;
-    }
-
 }
