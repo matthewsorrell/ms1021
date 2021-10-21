@@ -16,9 +16,6 @@ import static com.msorrell.project.util.ProjectUtils.initializeTools;
  */
 public final class InputValidator {
 
-    private InputValidator() {
-    }
-
     /**
      * Retrieves the Tool that is associated with the toolCodes passed.
      * Returns null if no tool is associated with the code

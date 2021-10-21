@@ -27,6 +27,7 @@ public class Checkout {
 
     /**
      * Number of days the tool will be rented.
+     * Must be greater than 0
      */
     private int rentalDayCount;
 

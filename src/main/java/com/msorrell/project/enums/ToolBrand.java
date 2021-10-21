@@ -1,7 +1,7 @@
 package com.msorrell.project.enums;
 
 /**
- * The brand of each tool.
+ * The brand of tool.
  */
 public enum ToolBrand {
 

@@ -9,7 +9,7 @@ import static com.msorrell.project.util.ProjectUtils.DATE_FORMATTER;
 
 /**
  * Rental Agreement.
- * Generated once checkout has completed. Contains checkout data plus charges.
+ * Generated once the checkout has completed. Contains checkout data plus charges.
  */
 public class RentalAgreement {
 
@@ -40,24 +40,26 @@ public class RentalAgreement {
 
     /**
      * The number of days to be charged. Determined by the tool type.
+     * Count of chargeable days, from day after checkout through and including due date,
+     * excluding “no charge” days as specified by the tool type.
      */
     private int chargeDays;
 
     /**
      * The amount charged before the discount is applied.
-     * Calculated by dailyRentalCharge X chargeDays
+     * Calculated by dailyRentalCharge X chargeDays, rounded half up to cents.
      */
     private BigDecimal preDiscountCharge;
 
     /**
-     * The percent to discount.
+     * The discount percent.
      * Represented by a whole number 0-100
      */
     private int discountPercent;
 
     /**
      * The amount to be discounted.
-     * Calculated by preDiscountCharge X (discountPercent X .01)
+     * Calculated by preDiscountCharge X (discountPercent X .01), rounded half up to cents.
      */
     private BigDecimal discountAmount;
 

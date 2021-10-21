@@ -43,18 +43,22 @@ public final class ProjectUtils {
     /**
      * Validation message for invalid rental days.
      */
-    public static final String INVALID_RENTAL_DAY_MESSAGE = "Rental Day Count must be greater than 0";
+    public static final String INVALID_RENTAL_DAY_MESSAGE = "Rental Day Count must be a whole number greater than 0";
 
     /**
      * Validation message for invalid discount percent.
      */
-    public static final String INVALID_DISCOUNT_PERCENT_MESSAGE = "Discount Percent must be between 0 and 100";
+    public static final String INVALID_DISCOUNT_PERCENT_MESSAGE = "Discount Percent must be a whole number between 0 and 100";
 
     /**
      * Validation message for invalid checkout date.
      */
     public static final String INVALID_CHECKOUT_DATE_MESSAGE = "Checkout Date must not be null";
 
+    /**
+     * Generates a Set of the available Tools.
+     * @return Set of the available Tools
+     */
     public static Set<Tool> initializeTools() {
         final Set<Tool> toolSet = new HashSet<>();
         toolSet.add(new Tool(ToolType.LADDER, ToolBrand.WERNER, "LADW"));

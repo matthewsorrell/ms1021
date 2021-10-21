@@ -59,9 +59,8 @@ public class ToolRentalTest {
         checkout.setCheckoutDate(LocalDate.of(2015, 9, 3));
         checkout.setRentalDayCount(5);
         final Exception exception = assertThrows(InvalidInputException.class, () -> checkout.setDiscountPercent(101));
-        final String expectedMessage = "Discount Percent must be between 0 and 100";
         final String actualMessage = exception.getMessage();
-        assertTrue(actualMessage.contains(expectedMessage));
+        assertTrue(actualMessage.contains(INVALID_DISCOUNT_PERCENT_MESSAGE));
     }
 
     @Test
@@ -206,6 +205,16 @@ public class ToolRentalTest {
     }
 
     @Test
+    void testNegativedRentalDayCount() {
+        final Tool tool = new Tool(ToolType.JACKHAMMER, ToolBrand.RIDGID, "JAKR");
+        checkout.setTool(tool);
+        checkout.setCheckoutDate(LocalDate.of(2015, 9, 3));
+        final Exception exception = assertThrows(InvalidInputException.class, () -> checkout.setRentalDayCount(-10));
+        final String actualMessage = exception.getMessage();
+        assertTrue(actualMessage.contains(INVALID_RENTAL_DAY_MESSAGE));
+    }
+
+    @Test
     void testInvalidCheckoutDate() {
         final Exception exception = assertThrows(InvalidInputException.class, () -> checkout.setCheckoutDate(null));
         final String actualMessage = exception.getMessage();
@@ -290,6 +299,26 @@ public class ToolRentalTest {
         assertEquals(rentalAgreement.getPreDiscountCharge(), convertDoubleToBigDecimal(17.94));
         assertEquals(rentalAgreement.getDiscountAmount(), convertDoubleToBigDecimal(10.76));
         assertEquals(rentalAgreement.getFinalCharge(), convertDoubleToBigDecimal(7.18));
+    }
+
+    @Test
+    void testRounding() {
+        final Tool tool = new Tool(ToolType.LADDER, ToolBrand.WERNER, "LADW");
+        checkout.setTool(tool);
+        checkout.setCheckoutDate(LocalDate.of(2015, 7, 1));
+        checkout.setRentalDayCount(11);
+        checkout.setDiscountPercent(33);
+        final RentalAgreement rentalAgreement = toolRentalService.generateRentalAgreement(checkout);
+        assertEquals(rentalAgreement.getTool(), tool);
+        assertEquals(rentalAgreement.getRentalDays(), checkout.getRentalDayCount());
+        assertEquals(rentalAgreement.getDiscountPercent(), checkout.getDiscountPercent());
+        assertEquals(rentalAgreement.getCheckoutDate(), checkout.getCheckoutDate());
+        assertEquals(rentalAgreement.getDueDate(), checkout.getCheckoutDate().plusDays(checkout.getRentalDayCount()));
+        assertEquals(rentalAgreement.getDailyRentalCharge(), tool.getType().getDailyCharge());
+        assertEquals(rentalAgreement.getChargeDays(), 10);
+        assertEquals(rentalAgreement.getPreDiscountCharge(), convertDoubleToBigDecimal(19.90));
+        assertEquals(rentalAgreement.getDiscountAmount(), convertDoubleToBigDecimal(6.57));
+        assertEquals(rentalAgreement.getFinalCharge(), convertDoubleToBigDecimal(13.33));
     }
 
     @Test

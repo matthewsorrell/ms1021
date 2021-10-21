@@ -25,7 +25,7 @@ import static java.time.temporal.TemporalAdjusters.firstInMonth;
 import static java.util.stream.Collectors.toSet;
 
 /**
- * Service that generates the Checkout, the RentalAgreement.
+ * Service that generates the Checkout and the RentalAgreement.
  */
 public class ToolRentalService {
 
@@ -44,6 +44,9 @@ public class ToolRentalService {
      * Calculates the number of chargeable days.
      * Count of chargeable days, from day after checkout through and including due date,
      * excluding “no charge” days as specified by the tool type.
+     *
+     * A day can only be a holiday, a weekend, or a weekday. It cannot count more than once.
+     *
      * @param checkoutDate Day the tool is checked out
      * @param dueDate Day the tool is due
      * @param toolType The type of tool. Used to determine which days count as chargeable
@@ -52,8 +55,9 @@ public class ToolRentalService {
     public int calculateChargeDays(final LocalDate checkoutDate, final LocalDate dueDate, final ToolType toolType) {
         final LocalDate dayAfterCheckout = checkoutDate.plusDays(1);
 
-        //A set that contains every date between the day ofter checkout and the due date
-        // (LocalDate.datesUntil is exclusive.)
+        /* A set that contains every date between the day ofter checkout and the due date
+           (LocalDate.datesUntil is exclusive.)
+        */
         final Set<LocalDate> setOfDays = dayAfterCheckout.datesUntil(dueDate.plusDays(1)).collect(toSet());
 
         int numberOfChargeDays = 0;
@@ -132,7 +136,7 @@ public class ToolRentalService {
         System.out.println("Please provide the number of rental day");
         String rentalDays = reader.readLine();
         while (!validateRentalDays(rentalDays)) {
-            System.out.println("Please provide a number greater than 0");
+            System.out.println("Please provide a whole number greater than 0");
             rentalDays = reader.readLine();
         }
         checkout.setRentalDayCount(Integer.parseInt(rentalDays));
@@ -140,7 +144,7 @@ public class ToolRentalService {
         System.out.println("Please provide the discount");
         String discount = reader.readLine();
         while (!validateDiscountPercent(discount)) {
-            System.out.println("Please provide a number between 0-100");
+            System.out.println("Please provide a whole number between 0-100");
             discount = reader.readLine();
         }
         checkout.setDiscountPercent(Integer.parseInt(discount));
@@ -175,7 +179,7 @@ public class ToolRentalService {
     /**
      * Determines if the day is a weekend date.
      * @param date LocalDate to test
-     * @return boolean
+     * @return true - is weekend day, false - is not weekend day
      */
     private static boolean isWeekend(final LocalDate date) {
         return WEEKEND_DAYS.contains(date.getDayOfWeek());
@@ -184,7 +188,7 @@ public class ToolRentalService {
     /**
      * Determines if the day is a weekday.
      * @param date LocalDate to test
-     * @return boolean
+     * @return true - is weekday, false - is not weekday
      */
     private static boolean isWeekday(final LocalDate date) {
         return WEEKDAY_DAYS.contains(date.getDayOfWeek());
@@ -193,7 +197,7 @@ public class ToolRentalService {
     /**
      * Determines if the date is a holiday.
      * @param date LocalDate to test
-     * @return boolean
+     * @return true - is holiday, false - is not holiday
      */
     private static boolean isHoliday(final LocalDate date) {
         return isLaborDay(date) || isIndependenceDay(date);
@@ -203,7 +207,7 @@ public class ToolRentalService {
      * Determines if the date is labor day.
      * First Monday in September
      * @param date LocalDate to test
-     * @return boolean
+     * @return true - is Labor Day, false - is not Labor Day
      */
     private static boolean isLaborDay(final LocalDate date) {
         final LocalDate laborDay = LocalDate.of(date.getYear(), Month.SEPTEMBER, 1).
@@ -216,14 +220,13 @@ public class ToolRentalService {
      * July 4th - If falls on weekend, it is observed on the closest weekday (if Sat, then
      * Friday before, if Sunday, then Monday after)
      * @param date LocalDate to test
-     * @return boolean
+     * @return true - is Independence Day, false - is not Independence Day
      */
     private static boolean isIndependenceDay(final LocalDate date) {
        LocalDate independenceDay = LocalDate.of(date.getYear(), Month.JULY, 4);
        if (DayOfWeek.SUNDAY.equals(independenceDay.getDayOfWeek())) {
            independenceDay = independenceDay.plusDays(1);
-       }
-       if (DayOfWeek.SATURDAY.equals(independenceDay.getDayOfWeek())) {
+       } else if (DayOfWeek.SATURDAY.equals(independenceDay.getDayOfWeek())) {
            independenceDay = independenceDay.minusDays(1);
        }
        return date.isEqual(independenceDay);
