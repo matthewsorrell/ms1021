@@ -344,4 +344,28 @@ public class ToolRentalTest {
         final String actualMessage = exception.getMessage();
         assertTrue(actualMessage.contains(INVALID_TOOL_CODE));
     }
+
+    @Test
+    void testInvalidToolCombination() {
+        final Tool tool = new Tool(ToolType.LADDER, ToolBrand.WERNER, "JAKR");
+        final Exception exception = assertThrows(InvalidInputException.class, () -> checkout.setTool(tool));
+        final String actualMessage = exception.getMessage();
+        assertTrue(actualMessage.contains(INVALID_TOOL_CODE));
+    }
+
+    @Test
+    void testInvalidToolCombination2() {
+        final Tool tool = new Tool(ToolType.JACKHAMMER, ToolBrand.WERNER, "JAKR");
+        final Exception exception = assertThrows(InvalidInputException.class, () -> checkout.setTool(tool));
+        final String actualMessage = exception.getMessage();
+        assertTrue(actualMessage.contains(INVALID_TOOL_CODE));
+    }
+
+    @Test
+    void testInvalidToolCombination3() {
+        final Tool tool = new Tool(ToolType.JACKHAMMER, ToolBrand.STIHL, "LADS");
+        final Exception exception = assertThrows(InvalidInputException.class, () -> checkout.setTool(tool));
+        final String actualMessage = exception.getMessage();
+        assertTrue(actualMessage.contains(INVALID_TOOL_CODE));
+    }
 }
